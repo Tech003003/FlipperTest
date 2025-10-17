@@ -6,9 +6,6 @@
     and waits for RustDesk to generate its configuration. Once the ID and password are available,
     they are written to a text file for later reference.
     Administrator privileges are required for installation.
-.PARAMETER CredentialOutputPath
-    Location of the text file that will receive the RustDesk ID and password. Defaults to a file
-    named "rustdesk-credentials.txt" alongside this script.
 .PARAMETER GithubApiUrl
     Override for the GitHub API endpoint used to obtain the latest RustDesk release metadata.
 .PARAMETER AssetNamePattern
@@ -17,14 +14,15 @@
     PS> .\install-rustdesk.ps1
 
     Installs RustDesk using the latest GitHub release and saves the generated ID/password to
-    rustdesk-credentials.txt in the script folder.
+    C:\ProgramData\RustDesk\rustdesk-credentials.txt.
 #>
 [CmdletBinding()]
 param(
-    [Parameter()] [string] $CredentialOutputPath = (Join-Path -Path $PSScriptRoot -ChildPath 'rustdesk-credentials.txt'),
     [Parameter()] [string] $GithubApiUrl = 'https://api.github.com/repos/rustdesk/rustdesk/releases/latest',
     [Parameter()] [string] $AssetNamePattern = 'windows.*x86_64.*\.exe$'
 )
+
+$CredentialOutputPath = 'C:\ProgramData\RustDesk\rustdesk-credentials.txt'
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
