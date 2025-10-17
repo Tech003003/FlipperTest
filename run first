@@ -1,0 +1,7 @@
+# Download the script
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$out = Join-Path $env:USERPROFILE 'Downloads\install-rustdesk.ps1'
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Tech003003/FlipperTest/main/install-rustdesk.ps1' -OutFile $out -UseBasicParsing -ErrorAction Stop
+
+# Launch elevated to run the downloaded file (UAC prompt)
+Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$out`""
