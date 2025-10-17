@@ -1,14 +1,7 @@
 # FlipperTest
-Random flipper zero scripts I'm attempting to write. This is meant for myself and not meant for public.
+This project is provided for educational and research purposes only.
+It may include code, scripts, or techniques that could be considered potentially malicious if used improperly.
+The author does not condone, support, or take responsibility for any misuse of this software or any actions performed with it.
 
-
-## Discord Webhook Helper
-
-Use the provided PowerShell script to send the contents of a `.txt` file to your Discord webhook.
-
-```powershell
-# Example usage
-./send-to-discord.ps1 -FilePath path/to/message.txt
-```
-
-The `-WebhookUrl` parameter defaults to your saved webhook, but you can override it when needed.
+By using or distributing any part of this repository, you agree that you are doing so at your own risk and in compliance with all applicable laws and regulations.
+Use responsibly and ethically.
