@@ -146,15 +146,15 @@ Write-Host 'Downloading latest RustDesk installer...'
 $installerUrl = Get-LatestRustDeskInstallerUrl -ApiUrl $GithubApiUrl -NamePattern $AssetNamePattern
 Write-Host "Installer URL: $installerUrl"
 
-# create a temp file path for .exe
-$tempInstaller = New-TemporaryFile
-$installerPath = [System.IO.Path]::ChangeExtension($tempInstaller.FullName, '.exe')
-Move-Item -Path $tempInstaller.FullName -Destination $installerPath -Force
+# Save installer to user's Downloads folder instead of TEMP
+$installerPath = Join-Path $env:USERPROFILE "Downloads\rustdesk_installer.exe"
 
-Write-Host "Downloading installer to $installerPath..."
-Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -Verbose -ErrorAction Stop
+Write-Host "Downloading RustDesk installer to $installerPath ..."
+Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing -ErrorAction Stop
+Write-Host "Download complete. Installing RustDesk from $installerPath ..."
 
 Invoke-SilentInstaller -InstallerPath $installerPath
+
 
 $rustDeskExe = Get-RustDeskExecutablePath
 Ensure-RustDeskServiceReady -ExecutablePath $rustDeskExe
@@ -179,4 +179,5 @@ if (-not (Test-Path -Path $credentialDirectory)) {
 $credentialLines | Set-Content -Path $CredentialOutputPath -Encoding UTF8
 Write-Host "RustDesk installation complete. Credentials saved to '$CredentialOutputPath'."
 
-try { Remove-Item -Path $installerPath -Force } catch { Write-Warning "Unable to remove temporary installer: $($_.Exception.Message)" }
+# (Keeping installer file in Downloads for later)
+Write-Host "Installer kept at $installerPath"
