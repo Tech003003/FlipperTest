@@ -3,6 +3,17 @@ Fixed installer script: TLS enforced, syntax error fixed, better diagnostics for
 and an elevation check. Inspect before running. Requires Administrator to install and write to ProgramData.
 #>
 
+# Self-elevation snippet 
+$principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host 'Not elevated — restarting as Administrator...'
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = 'powershell.exe'
+    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"" + $MyInvocation.MyCommand.Definition + "`""
+    $psi.Verb = 'runas'
+    try { [System.Diagnostics.Process]::Start($psi) | Out-Null; exit } catch { throw 'Elevation canceled or failed.' }
+}
+
 [CmdletBinding()]
 param(
     [Parameter()] [string] $GithubApiUrl = 'https://api.github.com/repos/rustdesk/rustdesk/releases/latest',
