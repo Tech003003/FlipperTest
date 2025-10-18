@@ -28,11 +28,8 @@ function Upload-Discord {
 
         if (-not ([string]::IsNullOrEmpty($file))) {
             if (Test-Path $file) {
-                # Use PowerShell's native approach instead of curl
-                $form = @{
-                    'file1' = Get-Item $file
-                }
-                Invoke-RestMethod -Uri $DiscordUrl -Method Post -Form $form
+                # Use curl for file uploads (more reliable)
+                curl.exe -F "file1=@$file" $DiscordUrl
                 Write-Host "File uploaded successfully"
             } else {
                 Write-Error "File not found: $file"
