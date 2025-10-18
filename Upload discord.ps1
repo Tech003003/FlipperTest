@@ -7,3 +7,4 @@ param (
     [parameter(Position=1,Mandatory=$False)]
     [string]$text 
 )
+}
